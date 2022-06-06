@@ -4,9 +4,6 @@ HSPHOME = os.path.join("hsp-planners/hsp-1.12")
 
 
 def run_hsp_planner(problem_path: str) -> None:
-    """
-    Run hsp planner, hsp saves result in solutions.all file
-    """
     dir_path = os.path.abspath(HSPHOME)
     abs_problem_path = dir_path + problem_path
 
@@ -17,6 +14,19 @@ def run_hsp_planner(problem_path: str) -> None:
               f"make compile;"
               f"make solve;")
 
-
+"""
+    ae loop -> runs population ae algorithm in loop with mutation
+"""
 if __name__ == "__main__":
+    # TEST
     run_hsp_planner(f'/pddl/logistics')
+
+    # TODO
+    # pop = init_pop(100)
+
+    # for member in pop():
+    #     mutate_pop(pop)
+    #     run_hsp_planner()
+    #     calc_fitness(pop)
+    #     remove_worst_from_pop(last=10)
+    #     add_new_members(pop)
