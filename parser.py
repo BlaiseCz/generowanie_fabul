@@ -36,7 +36,7 @@ class Operator:
         self.effects = []
 
 ############## WCZYTYWANIE ##############
-root = ET.parse('./geneticquest_db.xml').getroot()
+root = ET.parse('geneticquest_db.xml').getroot()
 
 types = defaultdict(list)
 for tag in root.findall('objects/object'):
