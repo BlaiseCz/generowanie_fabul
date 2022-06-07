@@ -106,9 +106,9 @@
 
     )
     (:goal
-		(safe mountainwest)
-		(has robin antidote5)
-		(at food4 vilageislandbridge)
+		(at wood3 store)
+		(healthy maggie)
+		(cured john)
 
     )
 )
