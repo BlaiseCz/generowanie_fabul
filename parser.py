@@ -46,8 +46,8 @@ class World:
             ...
             w.goal = w * w2
         """
-        result = sample(self.goal, len(self.goal)//2) + \
-                    sample(other.goal, len(other.goal)//2)
+        result = set(sample(self.goal, len(self.goal)//2) + \
+                     sample(other.goal, len(other.goal)//2) )
         return result
 
 
