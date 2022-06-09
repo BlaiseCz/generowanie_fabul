@@ -37,8 +37,18 @@ class World:
         self.goal.pop(randrange(len(self.goal)))
 
     def __mul__(self, other):
-        self.goal = sample(self.goal, len(self.goal)//2) + \
+        """
+        Crossovers self.goal set. ! In-place !
+
+        Usage:
+            w = World()
+            w2 = World()
+            ...
+            w.goal = w * w2
+        """
+        result = sample(self.goal, len(self.goal)//2) + \
                     sample(other.goal, len(other.goal)//2)
+        return result
 
 
     def read_from_xml(self, path: str):
