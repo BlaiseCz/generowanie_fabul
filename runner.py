@@ -19,7 +19,7 @@ def run_hsp_planner(problem_path: str) -> None:
 """
 if __name__ == "__main__":
     # TEST
-    run_hsp_planner(f'/pddl/logistics')
+    run_hsp_planner(f'/pddl/story')
 
     # TODO
     # pop = init_pop(100)

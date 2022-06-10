@@ -2,6 +2,10 @@ from collections import defaultdict
 from pprint import pprint
 from random import randrange
 import xml.etree.ElementTree as ET
+import os
+
+from runner import HSPHOME
+
 
 class Operator:
     def __init__(self) -> None:
@@ -140,4 +144,5 @@ if __name__ == "__main__":
     world.add_random_goal()
     world.add_random_goal()
     world.add_random_goal()
-    world.save_to_pddl('domain.pddl', 'problem.pddl')
+    save_path = dir_path = os.path.abspath(HSPHOME) + '/pddl/story/'
+    world.save_to_pddl( save_path + 'domain.pddl', save_path +'problem.pddl')
