@@ -1,6 +1,6 @@
 from collections import defaultdict
 from pprint import pprint
-from random import randrange
+from random import randrange, sample
 import xml.etree.ElementTree as ET
 import os
 
@@ -39,6 +39,21 @@ class World:
 
     def remove_random_goal(self):
         self.goal.pop(randrange(len(self.goal)))
+
+    def __mul__(self, other):
+        """
+        Crossovers self.goal set. ! In-place !
+
+        Usage:
+            w = World()
+            w2 = World()
+            ...
+            w.goal = w * w2
+        """
+        result = set(sample(self.goal, len(self.goal)//2) + \
+                     sample(other.goal, len(other.goal)//2) )
+        return result
+
 
     def read_from_xml(self, path: str):
 
@@ -98,7 +113,9 @@ class World:
                     for name in effect[1:]:
                         file.write(f"?{name} ")
                     file.write(")")
+                file.write(")\n")
                 file.write("\n   )\n")
+                file.write(")")
 
         #TODO: write predicates list at the end
 
