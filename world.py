@@ -9,6 +9,7 @@ class Operator:
         self.parameters = defaultdict(list)  # objects (name: type)
         self.preconditions = []  # predicates [name, param1, param2, ...]
         self.effects = []  # predicates [name, param1, param2, ...]
+        self.tension = 0
 
 
 """
@@ -86,6 +87,15 @@ class World:
                 self.operators[tag.get('name')].effects.append([effect.get('predicate')])
                 for parameter in effect.findall('parameter'):
                     self.operators[tag.get('name')].preconditions[-1].append(parameter.get('name'))
+        for event in root.findall('eventeffects/event'):
+            tension = event.get('tension')
+            if tension == "-":
+                self.operators[event.get('name')].tension = -1
+            elif tension == "=":
+                self.operators[event.get('name')].tension = 0
+            elif tension == "+":
+                self.operators[event.get('name')].tension = 1
+
 
     def save_to_pddl(self, path_domain: str, path_problem: str):
         start_text = """
