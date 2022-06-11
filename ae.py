@@ -1,7 +1,12 @@
-from world import World
-from random import random
+from copy import deepcopy
 
-def init_pop(pop_size=100) -> list(World):
+from typing import List
+
+from world import World
+from random import random, sample
+
+
+def init_pop(pop_size=100) -> list:
     population = list()
     for id in range(pop_size):
         world = World(id)
@@ -11,10 +16,11 @@ def init_pop(pop_size=100) -> list(World):
 
     return population
 
+
 def mutate_member(member, p=0.1):
-    if p < random():
+    if random() < p:
         member.add_random_goal()
-    if p < random():
+    if random() < p:
         member.remove_random_goal()
 
     return member
@@ -25,18 +31,35 @@ def calc_fitness(sollution):
 
 
 def assign_fitness(pop):
+    pass  # TODO
     # load sollutions.all file, then assign proper fitness
     # load file
-    loaded_file = [] #TODO
-    for individual in pop:
-        individual.calculate_fitness(loaded_file[individual.id])
-
-    pass
+    # loaded_file = []
+    # for individual in pop:
+    #     individual.calculate_fitness(loaded_file[individual.id])
 
 
-def remove_worst_from_pop(last):
-    pass
+"""
+    removing last individuals with lowest fitness,
+    to make space for crossovered individuals
+"""
 
 
-def add_new_members(pop):
-    pass
+def remove_worst_from_pop(pop, last=10) -> List[World]:
+    return sorted(pop, key=World.get_fitness())[:-last]
+
+
+"""
+    in paper they use roulette, 
+    here we pick randomly 2 parents from population 
+    and make crossover between them
+"""
+
+
+def add_new_members(pop, pop_size) -> List[World]:
+    old_pop = deepcopy(pop)
+    while pop_size > len(pop):
+        ind_1, ind_2 = sample(old_pop, 2)
+        pop.append(ind_1 * ind_2)
+
+    return pop

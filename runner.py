@@ -1,3 +1,4 @@
+import math
 import os
 
 from ae import init_pop, mutate_member, remove_worst_from_pop, add_new_members, assign_fitness
@@ -5,6 +6,7 @@ from ae import init_pop, mutate_member, remove_worst_from_pop, add_new_members, 
 HSPHOME = os.path.join("hsp-planners/hsp-1.12")
 POP_SIZE = 100
 ITERATIONS = 140
+
 
 def run_hsp_planner(problem_path: str) -> None:
     dir_path = os.path.abspath(HSPHOME)
@@ -19,23 +21,40 @@ def run_hsp_planner(problem_path: str) -> None:
 
 
 """
-    ae loop -> runs population ae algorithm in loop with mutation
+    Initializing PROBLEMS file with 
+    problems and domains list which go to planners 
 """
 
 
+def init_problems_file() -> None:
+    with open('hsp-planners/hsp-1.12/pddl/story/PROBLEMS', 'a') as myfile:
+        for i in range(POP_SIZE):
+            myfile.write(f'problem_{i}.pddl domain_{i}.pddl')
+            myfile.write('\n')
+
+
+def clear_problems_file() -> None:
+    open('hsp-planners/hsp-1.12/pddl/story/PROBLEMS', 'w').close()
+
+
+"""
+    ae loop -> runs population ae algorithm in loop with mutation
+"""
 if __name__ == "__main__":
     # TEST
     # run_hsp_planner(f'/pddl/story')
+    save_path = dir_path = os.path.abspath(HSPHOME) + '/pddl/story/'
     pop = init_pop(POP_SIZE)
+    init_problems_file()
 
     for _ in range(ITERATIONS):
-        for member in pop():
+        for member in pop:
             mut = mutate_member(member)
-            mut.save_to_pddl()
-            save_path = dir_path = os.path.abspath(HSPHOME) + '/pddl/story/'
-            mut.save_to_pddl(save_path + 'domain' + mut.id + '.pddl', save_path + 'problem' + mut.id + '.pddl')
+            mut.save_to_pddl(f'{save_path}domain_{mut.id}.pddl', f'{save_path}problem_{mut.id}.pddl')
 
         run_hsp_planner(f'/pddl/story')
         assign_fitness(pop)
         remove_worst_from_pop(last=10)
-        add_new_members(pop) # TODO with crossover
+        add_new_members(pop, POP_SIZE, math.floor(POP_SIZE * 0.3))
+
+    clear_problems_file()

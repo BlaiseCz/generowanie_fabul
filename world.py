@@ -40,7 +40,8 @@ class World:
         self.goal.append(result)
 
     def remove_random_goal(self):
-        self.goal.pop(randrange(len(self.goal)))
+        if len(self.goal) > 0:
+            self.goal.pop(randrange(len(self.goal)))
 
     def __mul__(self, other):
         """
@@ -158,5 +159,7 @@ class World:
     def calculate_fitness(self):
 
         self.fitness = random.no(0, 40)
+        return self.fitness
 
+    def get_fitness(self):
         return self.fitness
