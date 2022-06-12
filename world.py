@@ -96,15 +96,15 @@ class World:
             elif tension == "+":
                 self.operators[event.get('name')].tension = 1
 
-
     def save_to_pddl(self, path_domain: str, path_problem: str):
         start_text = """
-(define (domain castles-witches)
+(define (domain zombies)
    (:requirements :strips :typing)
 """
         with open(path_domain, "w") as file:
             file.write(start_text)
             file.write(f"   (:types {' '.join(self.objects.keys())})\n")
+
             for name, operator in self.operators.items():
                 file.write(f"   (:action {name}\n")
                 file.write(f"\t:parameters (")
@@ -133,7 +133,7 @@ class World:
 
         start_text = """
 (define  (problem marry-princess)
-    (:domain castles-witches)
+    (:domain zombies)
     (:objects
 """
         medium_text = """
