@@ -1,7 +1,7 @@
 import math
 import os
 
-from ae import init_pop, mutate_member, remove_worst_from_pop, add_new_members, assign_fitness
+from ae import init_pop, mutate_member, remove_worst_from_pop, add_new_members, assign_fitness, print_pop_stats
 
 HSPHOME = os.path.join("hsp-planners/hsp-1.12")
 POP_SIZE = 100
@@ -53,8 +53,8 @@ if __name__ == "__main__":
             mut.save_to_pddl(f'{save_path}domain_{mut.id}.pddl', f'{save_path}problem_{mut.id}.pddl')
 
         run_hsp_planner(f'/pddl/story')
-        assign_fitness(pop)
+        assign_fitness(population=pop, desired_story_arc=[1, 2, 3, 1])
         remove_worst_from_pop(last=10)
-        add_new_members(pop, POP_SIZE, math.floor(POP_SIZE * 0.3))
-
+        add_new_members(population=pop, pop_size=POP_SIZE)
+        print_pop_stats(pop)
     clear_problems_file()
