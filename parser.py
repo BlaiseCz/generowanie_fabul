@@ -10,4 +10,4 @@ if __name__ == "__main__":
     world.add_random_goal()
     world.add_random_goal()
     save_path = dir_path = os.path.abspath(HSPHOME) + '/pddl/story/'
-    world.save_to_pddl( save_path + 'domain.pddl', save_path +'problem.pddl')
+    world.save_to_pddl_no_typing( save_path + 'domainM.pddl', save_path +'problemM.pddl')

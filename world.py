@@ -99,7 +99,7 @@ class World:
 
     def save_to_pddl(self, path_domain: str, path_problem: str):
         start_text = """
-(define (domain castles-witches)
+(define (domain generowanie)
    (:requirements :strips :typing)
 """
         with open(path_domain, "w") as file:
@@ -129,11 +129,9 @@ class World:
                 file.write("\n   )\n")
                 file.write(")")
 
-        # TODO: write predicates list at the end
-
         start_text = """
-(define  (problem marry-princess)
-    (:domain castles-witches)
+(define  (problem projekcik)
+    (:domain generowanie)
     (:objects
 """
         medium_text = """
@@ -166,9 +164,77 @@ class World:
 
             file.write(end_text)
 
+    def save_to_pddl_no_typing(self, path_domain: str, path_problem: str):
+        start_text = """
+    (define (domain generowanie)
+        (:predicates """
+        with open(path_domain, "w") as file:
+            file.write(start_text)
+            for parameters in self.predicates:
+                file.write(f"({parameters[0]} ?{' ?'.join(parameters[1:])})\n")
+
+            for name, operator in self.operators.items():
+                file.write(f"   (:action {name}\n")
+                file.write(f"\t:parameters (")
+                for type, names in operator.parameters.items():
+                    for name in names:
+                        file.write(f" ?{name}")
+                file.write(")\n")
+                file.write(f"\t:precondition (and")
+                for predicate in operator.preconditions:
+                    file.write(f" ({predicate[0]}")
+                    for name in predicate[1:]:
+                        file.write(f" ?{name} ")
+                    file.write(")")
+                file.write(")\n")
+                file.write(f"\t:effect (and")
+                for effect in operator.preconditions:
+                    file.write(f" ({effect[0]}")
+                    for name in effect[1:]:
+                        file.write(f" ?{name} ")
+                    file.write(")")
+                file.write(")\n")
+                file.write("\n   )\n")
+            file.write(")")
+
+            start_text = """
+    (define  (problem projekcik)
+        (:domain generowanie)
+        (:objects
+    """
+            medium_text = """
+        )
+        (:init
+    """
+            goal_text = """
+        )
+        (:goal
+    """
+            end_text = """
+        )
+    )
+    """
+        with open(path_problem, "w") as file:
+            file.write(start_text)
+
+            for type, names in self.objects.items():
+                file.write(f"\t\t{' '.join(names)} ")
+
+            file.write(medium_text)
+
+            for predicate in self.start:
+                file.write(f"\t\t({' '.join(predicate)})\n")
+
+            file.write(goal_text)
+
+            for predicate in self.goal:
+                file.write(f"\t\t({' '.join(predicate)})\n")
+
+            file.write(end_text)
+
     def calculate_fitness(self):
 
-        self.fitness = random.no(0, 40)
+        self.fitness = random.normalvariate(0, 40)
         return self.fitness
 
     def get_fitness(self):
