@@ -86,7 +86,7 @@ class World:
             for effect in tag.findall('effects/effect'):
                 self.operators[tag.get('name')].effects.append([effect.get('predicate')])
                 for parameter in effect.findall('parameter'):
-                    self.operators[tag.get('name')].preconditions[-1].append(parameter.get('name'))
+                    self.operators[tag.get('name')].effects[-1].append(parameter.get('name'))
         for event in root.findall('eventeffects/event'):
             tension = event.get('tension')
             if tension == "-":
@@ -101,9 +101,28 @@ class World:
         	    (:requirements :strips)
                 (:predicates """
         with open(path_domain, "w") as file:
+            written = set()
+
             file.write(start_text)
             for parameters in self.predicates:
                 file.write(f"({parameters[0]} ?{' ?'.join(parameters[1:])})\n")
+                written.add(parameters[0])
+
+            for parameters in self.start:
+                if parameters[0] not in written:
+                    file.write(f"({parameters[0]} ?{' ?'.join(parameters[1:])})\n")
+                    written.add(parameters[0])
+
+            for operator in self.operators.values():
+                for parameters in operator.preconditions:
+                    if parameters[0] not in written:
+                        file.write(f"({parameters[0]} ?{' ?'.join(parameters[1:])})\n")
+                        written.add(parameters[0])
+                for parameters in operator.effects:
+                    if parameters[0] not in written:
+                        file.write(f"({parameters[0]} ?{' ?'.join(parameters[1:])})\n")
+                        written.add(parameters[0])
+
             file.write(")")
 
             for name, operator in self.operators.items():
