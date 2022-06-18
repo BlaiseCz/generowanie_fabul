@@ -95,7 +95,6 @@ class World:
                 self.operators[event.get('name')].tension = 0
             elif tension == "+":
                 self.operators[event.get('name')].tension = 1
-        self.add_random_goal()
 
     def save_domain(self, path_domain: str):
         start_text = """(define (domain zombie)
