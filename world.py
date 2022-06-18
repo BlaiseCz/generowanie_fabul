@@ -68,10 +68,8 @@ class World:
 
         for tag in root.findall('relations/predicate'):
             self.start.append([tag.get('name')])
-            self.predicates.append([tag.get('name')])
             for parameter in tag.findall('parameter'):
                 self.start[-1].append(parameter.get('value'))
-                self.predicates[-1].append(parameter.get('value'))
 
         for tag in root.findall('predicates/predicate'):
             self.predicates.append([tag.get('name')])
@@ -134,11 +132,9 @@ class World:
             file.write(")")
 
     def save_problem(self, path_problem):
-        start_text = """
-           (define  (problem projekcik)
-               (:domain zombie)
-               (:objects
-           """
+        start_text = """(define  (problem projekcik)
+   (:domain zombie)
+   (:objects"""
         medium_text = """
                )
                (:init
@@ -157,7 +153,7 @@ class World:
             file.write(start_text)
 
             for type, names in self.objects.items():
-                file.write(f"\t\t{','.join(str(x) for x in list(names))} - {type} \n")
+                file.write(f"\t{' '.join(str(x) for x in list(names))} \n")
 
             file.write(medium_text)
 
