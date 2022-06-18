@@ -68,8 +68,10 @@ class World:
 
         for tag in root.findall('relations/predicate'):
             self.start.append([tag.get('name')])
+            self.predicates.append([tag.get('name')])
             for parameter in tag.findall('parameter'):
                 self.start[-1].append(parameter.get('value'))
+                self.predicates[-1].append(parameter.get('value'))
 
         for tag in root.findall('predicates/predicate'):
             self.predicates.append([tag.get('name')])
