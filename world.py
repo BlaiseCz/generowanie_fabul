@@ -99,80 +99,10 @@ class World:
                 self.operators[event.get('name')].tension = 1
         self.add_random_goal()
 
-    def save_to_pddl(self, path_domain: str, path_problem: str):
-        start_text = """
-(define (domain zombie)
-   (:requirements :strips :typing)
-"""
-        with open(path_domain, "w") as file:
-            file.write(start_text)
-            file.write(f"   (:types {' '.join(self.objects.keys())})\n")
-
-            for name, operator in self.operators.items():
-                file.write(f"   (:action {name}\n")
-                file.write(f"\t:parameters (")
-                for type, names in operator.parameters.items():
-                    for name in names:
-                        file.write(f"?{name} - {type} ")
-                file.write(")\n")
-                file.write(f"\t:precondition (and")
-                for predicate in operator.preconditions:
-                    file.write(f" ({predicate[0]}")
-                    for name in predicate[1:]:
-                        file.write(f"?{name} ")
-                    file.write(")")
-                file.write(")\n")
-                file.write(f"\t:effect (and")
-                for effect in operator.preconditions:
-                    file.write(f" ({effect[0]}")
-                    for name in effect[1:]:
-                        file.write(f"?{name} ")
-                    file.write(")")
-                file.write(")\n")
-                file.write("\n   )\n")
-                file.write(")")
-
-        start_text = """
-(define  (problem projekcik)
-    (:domain zombie)
-    (:objects
-"""
-        medium_text = """
-    )
-    (:init
-"""
-        goal_text = """
-    )
-    (:goal
-     (and
-"""
-        end_text = """
-     )
-    )
-)
-"""
-        with open(path_problem, "w") as file:
-            file.write(start_text)
-
-            for type, names in self.objects.items():
-                file.write(f"\t\t{', '.join(names)} - {type}\n")
-
-            file.write(medium_text)
-
-            for predicate in self.start:
-                file.write(f"\t\t({' '.join(predicate)})\n")
-
-            file.write(goal_text)
-
-            for predicate in self.goal:
-                file.write(f"\t\t({' '.join(predicate)})\n")
-
-            file.write(end_text)
-
-    def save_to_pddl_no_typing(self, path_domain: str, path_problem: str):
-        start_text = """
-    (define (domain zombie)
-        (:predicates """
+    def save_domain(self, path_domain: str):
+        start_text = """(define (domain zombie)
+        	    (:requirements :strips)
+                (:predicates """
         with open(path_domain, "w") as file:
             file.write(start_text)
             for parameters in self.predicates:
@@ -203,30 +133,31 @@ class World:
                 file.write("\n   )\n")
             file.write(")")
 
-            start_text = """
-    (define  (problem projekcik)
-        (:domain zombie)
-        (:objects
-    """
-            medium_text = """
-        )
-        (:init
-    """
-            goal_text = """
-        )
-        (:goal
-         (and
-    """
-            end_text = """
-         )
-        )
-    )
-    """
+    def save_problem(self, path_problem):
+        start_text = """
+           (define  (problem projekcik)
+               (:domain zombie)
+               (:objects
+           """
+        medium_text = """
+               )
+               (:init
+           """
+        goal_text = """
+               )
+               (:goal
+                (and
+           """
+        end_text = """
+                )
+               )
+           )
+           """
         with open(path_problem, "w") as file:
             file.write(start_text)
 
             for type, names in self.objects.items():
-                file.write(f"\t\t{' '.join(names)} ")
+                file.write(f"\t\t{','.join(str(x) for x in list(names))} - {type} \n")
 
             file.write(medium_text)
 
@@ -240,8 +171,11 @@ class World:
 
             file.write(end_text)
 
-    def calculate_fitness(self):
+    def save_to_pddl_no_typing(self, path_domain: str, path_problem: str):
+        self.save_domain(path_domain)
+        self.save_problem(path_problem)
 
+    def calculate_fitness(self):
         self.fitness = random.normalvariate(0, 40)
         return self.fitness
 
