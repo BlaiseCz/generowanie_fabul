@@ -4,7 +4,7 @@ from runner import HSPHOME
 from world import World
 
 if __name__ == "__main__":
-    world = World()
+    world = World(id=1)
     world.read_from_xml('./geneticquest_db.xml')
     world.add_random_goal()
     world.add_random_goal()

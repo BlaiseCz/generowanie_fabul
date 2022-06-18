@@ -697,7 +697,7 @@
 				<precondition predicate="isantidote">
 					<parameter name="i"/>
 				</precondition>
-				<precondition predicate="!=">
+				<precondition predicate="different">
 					<parameter name="c1"/>
 					<parameter name="c2"/>
 				</precondition>
@@ -779,7 +779,7 @@
 				<precondition predicate="isfood">
 					<parameter name="i"/>
 				</precondition>
-				<precondition predicate="!=">
+				<precondition predicate="different">
 					<parameter name="c1"/>
 					<parameter name="c2"/>
 				</precondition>

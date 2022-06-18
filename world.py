@@ -95,10 +95,11 @@ class World:
                 self.operators[event.get('name')].tension = 0
             elif tension == "+":
                 self.operators[event.get('name')].tension = 1
+        self.add_random_goal()
 
     def save_to_pddl(self, path_domain: str, path_problem: str):
         start_text = """
-(define (domain generowanie)
+(define (domain zombie)
    (:requirements :strips :typing)
 """
         with open(path_domain, "w") as file:
@@ -131,7 +132,7 @@ class World:
 
         start_text = """
 (define  (problem projekcik)
-    (:domain generowanie)
+    (:domain zombie)
     (:objects
 """
         medium_text = """
@@ -141,8 +142,10 @@ class World:
         goal_text = """
     )
     (:goal
+     (and
 """
         end_text = """
+     )
     )
 )
 """
@@ -166,12 +169,13 @@ class World:
 
     def save_to_pddl_no_typing(self, path_domain: str, path_problem: str):
         start_text = """
-    (define (domain generowanie)
+    (define (domain zombie)
         (:predicates """
         with open(path_domain, "w") as file:
             file.write(start_text)
             for parameters in self.predicates:
                 file.write(f"({parameters[0]} ?{' ?'.join(parameters[1:])})\n")
+            file.write(")")
 
             for name, operator in self.operators.items():
                 file.write(f"   (:action {name}\n")
@@ -199,7 +203,7 @@ class World:
 
             start_text = """
     (define  (problem projekcik)
-        (:domain generowanie)
+        (:domain zombie)
         (:objects
     """
             medium_text = """
@@ -209,8 +213,10 @@ class World:
             goal_text = """
         )
         (:goal
+         (and
     """
             end_text = """
+         )
         )
     )
     """
