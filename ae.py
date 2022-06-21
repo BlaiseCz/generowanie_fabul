@@ -13,6 +13,7 @@ def init_pop(pop_size=100) -> list:
     for id in range(pop_size):
         world = World(id)
         world.read_from_xml('./geneticquest_db.xml')
+        world.add_random_goal()
         population.append(world)
         print(f"World #{world.id} created")
 
@@ -53,20 +54,18 @@ def get_tensions(solutions_path, actions, population) -> List[World]:
 
     return population
 
-def assign_fitness(population, desired_story_arc):
-    tensions = get_tensions("./zombie/solutions.all", world.actions, population)
+def assign_fitness(member, desired_story_arc):
+    def scale_tension(tension: List[int], interval: int) -> List[int]:
+        return [tension[int(round((((i - 1) / interval) * (len(tension) - 1)) + 1)) - 1]
+                for i in range(interval)]
 
-    for individual in population:
-        individual.set_fitness(desired_story_arc)
-        print(individual.get_fitness())
-    pass  # TODO
+    tensions = member.get_tensions()
+    scaled_tensions = scale_tension(tensions, len(desired_story_arc))
 
+    mse = (sum([(scaled_tensions[i] - desired_story_arc[i]) ** 2
+                for i in range(len(desired_story_arc))]) / len(desired_story_arc))
+    return len(member.actions_from_planner) / mse
 
-    # load sollutions.all file, then assign proper fitness
-    # load file
-    # loaded_file = []
-    # for individual in pop:
-    #     individual.calculate_fitness(loaded_file[individual.id])
 
 
 """
